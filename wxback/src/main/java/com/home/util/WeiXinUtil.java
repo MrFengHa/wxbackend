@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.home.config.WeiXinConfig;
 import com.home.entity.WeiXinAccessToken;
+import com.home.entity.WeiXinMenu;
 import com.home.entity.WeiXinTemplateMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -37,8 +38,11 @@ public class WeiXinUtil {
             }
             System.out.println("内部没有");
             redisTemplate.opsForValue().set("access_token",token.getAccess_token(),token.getExpires_in()-5, TimeUnit.SECONDS);
-        }
+            return token.getAccess_token();
+        }else {
             return accessToken;
+        }
+
     }
 
     /**
@@ -62,5 +66,19 @@ public class WeiXinUtil {
         JSONObject jsonObject = JSONObject.parseObject(response);
         return jsonObject.getInteger("errcode") == 0;
 
+    }
+
+    /**
+     * 创建菜单
+     * @param menu
+     * @return
+     */
+    public boolean createMenu(WeiXinMenu menu){
+        String postData = JSON.toJSONString(menu);
+        System.out.println(postData);
+        String response = HttpUtil.post("https://api.weixin.qq.com/cgi-bin/menu/create?access_token="+getAccessToken(),postData);
+        JSONObject jsonObject = JSONObject.parseObject(response);
+        System.out.println(response);
+        return jsonObject.getInteger("errcode") == 0;
     }
 }
