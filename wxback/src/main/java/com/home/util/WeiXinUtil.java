@@ -6,7 +6,11 @@ import com.home.config.WeiXinConfig;
 import com.home.entity.WeiXinAccessToken;
 import com.home.entity.WeiXinTemplateMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * 文件描述
@@ -17,21 +21,29 @@ import org.springframework.stereotype.Component;
 @Component
 public class WeiXinUtil {
     @Autowired
+    RedisTemplate redisTemplate;
+    @Autowired
     WeiXinConfig weiXinConfig;
 
     public String getAccessToken() {
-        String response = HttpUtil.get("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + weiXinConfig.getAppid() + "&secret=" + weiXinConfig.getAppsecret());
-        WeiXinAccessToken token = JSONObject.parseObject(response, WeiXinAccessToken.class);
+        String accessToken = (String) redisTemplate.opsForValue().get("access_token");
+        if (StringUtils.isEmpty(accessToken)) {
+            String response = HttpUtil.get("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + weiXinConfig.getAppid() + "&secret=" + weiXinConfig.getAppsecret());
+            WeiXinAccessToken token = JSONObject.parseObject(response, WeiXinAccessToken.class);
 
-        System.out.println(token.getAccess_token() + "......................" + token.getExpires_in());
-        if (token.getAccess_token() == null) {
-            return null;
+            System.out.println(token.getAccess_token() + "......................" + token.getExpires_in());
+            if (token.getAccess_token() == null) {
+                return null;
+            }
+            System.out.println("内部没有");
+            redisTemplate.opsForValue().set("access_token",token.getAccess_token(),token.getExpires_in()-5, TimeUnit.SECONDS);
         }
-        return token.getAccess_token();
+            return accessToken;
     }
 
     /**
      * 发送模板消息
+     *
      * @param toUser
      * @param templateId
      * @param url
