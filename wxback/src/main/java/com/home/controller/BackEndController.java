@@ -56,7 +56,7 @@ public class BackEndController {
             WeiXinNotify notify = (WeiXinNotify) xStream.fromXML(request.getInputStream());
             System.out.println(notify.toString());
             if (notify.getMsgType().equals("text")) {
-                //return createTextMessage(notify);
+                return createTextMessage(notify);
 
                 //return createNewMessage(notify);
             } else if (notify.getMsgType().equals("image")) {

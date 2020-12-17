@@ -34,6 +34,7 @@ public class WeiXinNotify {
     private String Latitude;
     private String Longitude;
     private String Precision;
+    private String MenuId;
 
     public String getToUserName() {
         return ToUserName;
@@ -227,33 +228,11 @@ public class WeiXinNotify {
         Precision = precision;
     }
 
-    @Override
-    public String toString() {
-        return "WeiXinNotify{" +
-                "ToUserName='" + ToUserName + '\'' +
-                ", FromUserName='" + FromUserName + '\'' +
-                ", CreateTime='" + CreateTime + '\'' +
-                ", MsgType='" + MsgType + '\'' +
-                ", MsgId='" + MsgId + '\'' +
-                ", Content='" + Content + '\'' +
-                ", PicUrl='" + PicUrl + '\'' +
-                ", MediaId='" + MediaId + '\'' +
-                ", Format='" + Format + '\'' +
-                ", Recognition='" + Recognition + '\'' +
-                ", ThumbMediaId='" + ThumbMediaId + '\'' +
-                ", Location_X='" + Location_X + '\'' +
-                ", Location_Y='" + Location_Y + '\'' +
-                ", Scale='" + Scale + '\'' +
-                ", Label='" + Label + '\'' +
-                ", Title='" + Title + '\'' +
-                ", Description='" + Description + '\'' +
-                ", Url='" + Url + '\'' +
-                ", Event='" + Event + '\'' +
-                ", EventKey='" + EventKey + '\'' +
-                ", Ticket='" + Ticket + '\'' +
-                ", Latitude='" + Latitude + '\'' +
-                ", Longitude='" + Longitude + '\'' +
-                ", Precision='" + Precision + '\'' +
-                '}';
+    public String getMenuId() {
+        return MenuId;
+    }
+
+    public void setMenuId(String menuId) {
+        MenuId = menuId;
     }
 }

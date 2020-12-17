@@ -46,7 +46,7 @@ public class WeiXinMenuTest {
         WeiXinMenuItem item2_3 =new WeiXinMenuItem();
         item2_3.setName("进入百度");
         item2_3.setType("view");
-        item2_3.setUrl("http://8163af579cb4.ngrok.io/aaa");
+        item2_3.setUrl("http://lszxydh.cn/aaa");
 
         item2.getSub_button().add(item2_1);
         item2.getSub_button().add(item2_2);
@@ -61,9 +61,9 @@ public class WeiXinMenuTest {
         item3_1.setKey("SELECT_PIC_01");
 
         WeiXinMenuItem item3_2 =new WeiXinMenuItem();
-        item3_2.setName("进入百度");
+        item3_2.setName("进入自定义");
         item3_2.setType("view");
-        item3_2.setUrl("http://www.baidu.com");
+        item3_2.setUrl("http://lszxydh.cn/ccc");
 
         item3.getSub_button().add(item3_1);
         item3.getSub_button().add(item3_2);
