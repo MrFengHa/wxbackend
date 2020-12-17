@@ -2,6 +2,7 @@ package com.home.controller;
 
 import com.home.config.WeiXinConfig;
 import com.home.entity.WeiXinTokenAuth;
+import com.home.entity.WeiXinUserInfo;
 import com.home.entity.WeiXinUserInfoAuth;
 import com.home.util.WeiXinUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,36 +24,44 @@ public class WebController {
     WeiXinConfig weiXinConfig;
     @Autowired
     WeiXinUtil weiXinUtil;
+
     @RequestMapping("aaa")
-    public String aaa(){
+    public String aaa() {
         System.out.println("进来了aaaa");
         return "redirect:/getAuthorize";
     }
 
-    @RequestMapping("bbb")
-    public String bbb(@RequestParam String code, @RequestParam String state, Model model){
-       WeiXinTokenAuth accessToken =  weiXinUtil.getAccessTokenAuth(code);
-       //拉去用户信息
-        WeiXinUserInfoAuth userInfo = weiXinUtil.getUSerInfoAuth(accessToken.getAccess_token(),accessToken.getOpenid());
-        System.out.println("userinfo.toString"+userInfo.toString());
-        model.addAttribute("userInfo",userInfo);
-        return "bbb";
+    @RequestMapping("auth_back")
+    public String bbb(@RequestParam String code, @RequestParam String state, Model model) {
+        WeiXinTokenAuth accessToken = weiXinUtil.getAccessTokenAuth(code);
+        //拉去用户信息
+        WeiXinUserInfoAuth userInfoAuth = weiXinUtil.getUserInfoAuth(accessToken.getAccess_token(), accessToken.getOpenid());
+        System.out.println("userinfo.toString" + userInfoAuth.toString());
+        WeiXinUserInfo userInfo = weiXinUtil.getUserInfo(userInfoAuth.getOpenid());
+        model.addAttribute("userInfo", userInfoAuth);
+        if (userInfo != null & userInfo.getSubscribe() == 1){
+            return "bbb";
+        }else{
+            return "ccc";
+        }
+
     }
 
+
     @RequestMapping("ccc")
-    public String ccc(){
+    public String ccc() {
 
         return "aaa";
     }
 
     @GetMapping("getAuthorize")
-    public String getAuthorize(){
-        String redirectURL = "http://lszxydh.cn/bbb";
-        String url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="+weiXinConfig.getAppid()
-                +"&redirect_uri="+redirectURL
-                +"&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+    public String getAuthorize() {
+        String redirectURL = "http://lszxydh.cn/auth_back";
+        String url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=" + weiXinConfig.getAppid()
+                + "&redirect_uri=" + redirectURL
+                + "&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
         System.out.println(url);
 
-        return "redirect:"+url;
+        return "redirect:" + url;
     }
 }

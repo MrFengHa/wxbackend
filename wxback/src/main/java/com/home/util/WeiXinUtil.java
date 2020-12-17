@@ -118,7 +118,13 @@ public class WeiXinUtil {
         return jsonObject.getInteger("errcode") == 0;
     }
 
-    public WeiXinUserInfoAuth getUSerInfoAuth(String accessToken, String openId) {
+    /**
+     * 获取用户信息授权
+     * @param accessToken
+     * @param openId
+     * @return
+     */
+    public WeiXinUserInfoAuth getUserInfoAuth(String accessToken, String openId) {
         String response = HttpUtil.get("https://api.weixin.qq.com/sns/userinfo?access_token=" + accessToken + "&openid=" + openId + "&lang=zh_CN");
 
         WeiXinUserInfoAuth userInfoAuth = JSONObject.parseObject(response, WeiXinUserInfoAuth.class);
@@ -126,6 +132,27 @@ public class WeiXinUtil {
             System.out.println("没有获取到");
             return null;
         }
+        for (String privilege:
+                userInfoAuth.getPrivilege() ) {
+
+        }
         return userInfoAuth;
     }
+
+    /**
+     * 获取用户信息(UnionID机制)
+     * @param openId
+     * @return
+     */
+    public WeiXinUserInfo getUserInfo(String openId) {
+        String response = HttpUtil.get("https://api.weixin.qq.com/cgi-bin/user/info?access_token=" + getAccessToken() + "&openid=" + openId + "&lang=zh_CN");
+
+        WeiXinUserInfo userInfo= JSONObject.parseObject(response, WeiXinUserInfo.class);
+        if (userInfo.getOpenid() == null) {
+            System.out.println("没有获取到");
+            return null;
+        }
+        return userInfo;
+    }
+
 }
